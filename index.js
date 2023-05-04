@@ -84,7 +84,7 @@ app.post('/people', (req, res) => {
 })
 
 //DELETE
-app.delete('/people/:id', (res, req) => {
+app.delete('/people/:id', (req, res) => {
     let ic = req.params.id
     let sql = `delete from users where id = ${id}`
 
@@ -124,12 +124,49 @@ app.get('/login', (req, res) => {
 })
 
 //GET Login by ID
-app.get('/login/:id', (res, req) => {
+app.get('/login/:id', (req, res) => {
     let id = req.params.id
     let sql = `select * from where login_id = ${id}`
 
-    
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Here is the record requested!',
+            data: result
+        })        
+    })
 })
+
+// POST Login
+app.post('/login', (req, res) => {
+    let wrap = req.body
+
+    let login = wrap.login
+    let password = wrap.password
+
+    let sql = `insert into login (login, password) values ('${login}', '${password}')`
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(201).json({
+            error: false,
+            message: 'Record has been created!',
+            data: result
+        })
+    })
+})
+
 
 const PORT = '5000';
 app.listen(PORT, console.log(`Your backend is up! at port: ${PORT}`))
