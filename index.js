@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
+const uuid = require('uuid')
+const uuid4 = uuid.v4()
 
 const db = require('./config/db')
 
 const cors = require('cors')
 
-app.use(cors())
 app.use(express.json());
+app.use(cors())
 
 
 app.get("/" , (req, res) => {
@@ -15,7 +17,7 @@ app.get("/" , (req, res) => {
 
 //GET ALL People
 app.get('/people', (req, res) => {
-    let sql = `select * from user`
+    let sql = `select * from users`
     db.connection.query(sql, (error, result) => {
         if(error) {
             res.status(500).json({
@@ -33,8 +35,8 @@ app.get('/people', (req, res) => {
 
 //GET People by ID
 app.get('/people/:id', (req, res) => {
-    let ic = req.params.id
-    let sql = `select * from user where id = ${id}`
+    let id = req.params.id
+    let sql = `select * from users where user_id = ${id}`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -54,11 +56,17 @@ app.get('/people/:id', (req, res) => {
 app.post('/people', (req, res) => {
     let wrap = req.body
 
+    let id = uuid4
     let name = wrap.name
     let age = wrap.age
     let address = wrap.address
+    let ic = wrap.ic
+    let major = wrap.wrap
+    let skill_id = wrap.skill_id
+    let service_id = wrap.service_id
+    let description = wrap.description
 
-    let sql = `insert into user (name, age, address) values ('${name}', '${age}', '${address}')`
+    let sql = `insert into users (name, age, address) values ('${name}', '${age}', '${address}')`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -78,7 +86,7 @@ app.post('/people', (req, res) => {
 //DELETE
 app.delete('/people/:id', (res, req) => {
     let ic = req.params.id
-    let sql = `delete from user where id = ${id}`
+    let sql = `delete from users where id = ${id}`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -98,7 +106,7 @@ app.delete('/people/:id', (res, req) => {
 
 //USER-----------LOGIN
 //GET ALL LOGIN
-app.get('login', (res, req) => {
+app.get('/login', (req, res) => {
     let sql = `select * from login`
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -109,12 +117,19 @@ app.get('login', (res, req) => {
         }
         res.status(200).json({
             error: false,
-            message: 'Here is the record requested!',
+            message: "Here's the record requested!",
             data: result
         })
     })
 })
 
+//GET Login by ID
+app.get('/login/:id', (res, req) => {
+    let id = req.params.id
+    let sql = `select * from where login_id = ${id}`
+
+    
+})
 
 const PORT = '5000';
-app.listen(PORT, console.log(`Your server is up! at port: ${PORT}`))
+app.listen(PORT, console.log(`Your backend is up! at port: ${PORT}`))
