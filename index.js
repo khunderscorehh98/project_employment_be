@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const uuid = require('uuid')
-const uuid4 = uuid.v4()
 
 const db = require('./config/db')
 
@@ -56,17 +55,18 @@ app.get('/people/:id', (req, res) => {
 app.post('/people', (req, res) => {
     let wrap = req.body
 
-    let id = uuid4
+    let id = uuid.v4()
     let name = wrap.name
     let age = wrap.age
     let address = wrap.address
     let ic = wrap.ic
     let major = wrap.wrap
-    let skill_id = wrap.skill_id
-    let service_id = wrap.service_id
+    let skill_id = uuid.v4()
+    let service_id = uuid.v4()
     let description = wrap.description
 
-    let sql = `insert into users (name, age, address) values ('${name}', '${age}', '${address}')`
+    let sql = `insert into users (id, name, age, address, ic, major, skill_id, service_id, description) 
+    values ('${id}', '${name}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
