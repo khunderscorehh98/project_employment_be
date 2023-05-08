@@ -116,8 +116,8 @@ app.post('/people', (req, res) => {
 
 //DELETE
 app.delete('/people/:id', (req, res) => {
-    let ic = req.params.id
-    let sql = `delete from users where id = ${id}`
+    let id = req.params.id
+    let sql = `delete from users where user_id = ${id}`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
