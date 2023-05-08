@@ -97,6 +97,23 @@ router.put('/service/:id', (req, res) => {
     })
 })
 
-// //DELETE
-// router.delete()
+//DELETE
+router.delete('/service/:id', (req, res) => {
+    let user_id = req.params.id
+    let sql = `delete from service where user_id = ${user_id}`
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been deleted',
+            data: result
+        })
+    })
+})
 module.exports = router
