@@ -65,4 +65,49 @@ router.post('/login', (req, res) => {
     })
 })
 
+//Delete
+router.delete('/login/:id', (req, res) => {
+    let login_id = req.params.id
+    let sql = `delete from login where login_id = ${login_id}`
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been deleted!',
+            data: result
+        })
+    })
+})
+
+
+//Put
+router.put('/login/:id', (req, res) => {
+    let login_id = req.params.id
+
+    let wrap = req.body
+    let login = wrap.login
+    let password = wrap.password
+
+    let sql = `update login set login = '${login}, password = '${password} where login_id = '${login_id}'`
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(201).json({
+            error: false,
+            message: 'Record has been updated!',
+            data: result
+        })
+    })
+})
 module.exports = router;
