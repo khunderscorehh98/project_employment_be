@@ -36,6 +36,8 @@ setInterval(() => {
 
 const db = require('./config/db')
 
+const userRouter = require('./router/users')
+
 const cors = require('cors')
 
 app.use(express.json());
@@ -46,120 +48,8 @@ app.get("/" , (req, res) => {
     res.json("Welcome to Database!")
 })
 
-//GET ALL People
-app.get('/people', (req, res) => {
-    let sql = `select * from users`
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: "Here's the record requested!",
-            data: result
-        })
-    })
-})
 
-//GET People by ID
-app.get('/people/:id', (req, res) => {
-    let id = req.params.id
-    let sql = `select * from users where user_id = ${id}`
-
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            data: result
-        })
-    })
-})
-
-//POST
-app.post('/people', (req, res) => {
-    let wrap = req.body
-
-    let name = wrap.name
-    let age = wrap.age
-    let address = wrap.address
-    let ic = wrap.ic
-    let major = wrap.major
-    let skill_id = getNextRandom()
-    let service_id = getNextRandom()
-    let description = wrap.description
-
-    let sql = `insert into users (name, age, address, ic, major, skill_id, service_id, description) 
-    values ('${name}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
-
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(201).json({
-            error: false,
-            message: "Record has been added!",
-            data: result
-        })
-    })
-})
-
-//DELETE
-app.delete('/people/:id', (req, res) => {
-    let id = req.params.id
-    let sql = `delete from users where user_id = ${id}`
-
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been deleted!'
-        })
-    })
-})
-
-app.put('/people/:id', (req, res) => {
-    let user_id = req.params.id
-
-    let wrap  = req.body
-    let name = wrap.name
-    let age = wrap.age
-    let address = wrap.address
-    let ic = wrap.ic
-    let major = wrap.major
-    let description = wrap.description
-
-    let sql = `update users set name = '${name}', age = '${age}', address = '${address}', ic = '${ic}', major = '${major}', description = '${description}' where user_id = '${user_id}' `
-
-    db.connection.query(sql, (error, result) => {
-        if(error) {
-            res.status(500).json({
-                error: true,
-                message: error.message
-            })
-        }
-        res.status(200).json({
-            error: false,
-            message: 'Record has been updated!',
-            data: result
-        })
-    })
-})
+app.use('/', userRouter)
 
 //USER-----------LOGIN
 //GET ALL LOGIN
