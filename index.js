@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
 
-// LOL
+const cors = require('cors')
+app.use(express.json());
+app.use(cors())
+
+// Random Number Generator, interval 3 seconds-------------------------
 const uuid = require('uuid');
 const seedrandom = require('seedrandom');
 const rng = seedrandom(uuid.v4());
@@ -32,27 +36,20 @@ setInterval(() => {
   const outputRng = getNextRandom();
   console.log(outputRng);
 }, 3000);
-//
+//--------------------------------------------------------------------------------
 
-const db = require('./config/db')
-
-const userRouter = require('./router/users')
-const loginRouter = require('./router/login')
-
-const cors = require('cors')
-
-app.use(express.json());
-app.use(cors())
-
-
+// Index Routing
 app.get("/" , (req, res) => {
     res.json("Welcome to Database!")
 })
 
+// Router 
+const userRouter = require('./router/users')
+const loginRouter = require('./router/login')
 
 app.use('/', userRouter)
 app.use('/', loginRouter)
 
-
+//Localhosting
 const PORT = '5000';
 app.listen(PORT, console.log(`Your backend is up! at port: ${PORT}`))
