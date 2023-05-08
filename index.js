@@ -87,18 +87,17 @@ app.get('/people/:id', (req, res) => {
 app.post('/people', (req, res) => {
     let wrap = req.body
 
-    let id = uuid.v4()
     let name = wrap.name
     let age = wrap.age
     let address = wrap.address
     let ic = wrap.ic
     let major = wrap.major
-    let skill_id = outputRng
-    let service_id = outputRng
+    let skill_id = getNextRandom()
+    let service_id = getNextRandom()
     let description = wrap.description
 
-    let sql = `insert into users (id, name, age, address, ic, major, skill_id, service_id, description) 
-    values ('${id}', '${name}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
+    let sql = `insert into users (name, age, address, ic, major, skill_id, service_id, description) 
+    values ('${name}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
