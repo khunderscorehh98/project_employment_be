@@ -66,12 +66,12 @@ router.post('/service', (req, res) => {
             message: 'Record has been added!',
             data: result
         })
-    }
+    })
 })
 
-//PUT
-router.put()
+// //PUT
+// router.put()
 
-//DELETE
-router.delete()
+// //DELETE
+// router.delete()
 module.exports = router
