@@ -69,8 +69,33 @@ router.post('/service', (req, res) => {
     })
 })
 
-// //PUT
-// router.put()
+//PUT
+router.put('/service/:id', (req, res) => {
+    let user_id = req.params.id
+    
+    let wrap = req.body
+    
+    let service = wrap.service
+    let price = wrap.price
+    let category = wrap.category
+    let description = wrap.description
+
+    let sql = `update service set service = ${service}, price = ${price}, category = ${category}, description = ${description} where user_id = ${user_id}`
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(201).json({
+            error: false,
+            message: 'Record has been updated!',
+            data: result
+        })
+    })
+})
 
 // //DELETE
 // router.delete()
