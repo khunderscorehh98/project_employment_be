@@ -1,6 +1,38 @@
 const express = require('express');
 const app = express();
-const uuid = require('uuid')
+
+// LOL
+const uuid = require('uuid');
+const seedrandom = require('seedrandom');
+const rng = seedrandom(uuid.v4());
+
+const MAX_NUMBER = 1000000;
+const MAX_ATTEMPTS = 10;
+const usedNumbers = new Set();
+
+function getNextRandom() {
+  let outputRng;
+  let attempts = 0;
+  do {
+    outputRng = Math.floor(rng() * MAX_NUMBER);
+    attempts += 1;
+  } while (usedNumbers.has(outputRng) && attempts < MAX_ATTEMPTS);
+
+  if (attempts === MAX_ATTEMPTS) {
+    // Reset the set of used numbers if we've exhausted all attempts
+    usedNumbers.clear();
+  } else {
+    usedNumbers.add(outputRng);
+  }
+
+  return outputRng;
+}
+
+setInterval(() => {
+  const outputRng = getNextRandom();
+  console.log(outputRng);
+}, 3000);
+//
 
 const db = require('./config/db')
 
@@ -60,9 +92,9 @@ app.post('/people', (req, res) => {
     let age = wrap.age
     let address = wrap.address
     let ic = wrap.ic
-    let major = wrap.wrap
-    let skill_id = uuid.v4()
-    let service_id = uuid.v4()
+    let major = wrap.major
+    let skill_id = outputRng
+    let service_id = outputRng
     let description = wrap.description
 
     let sql = `insert into users (id, name, age, address, ic, major, skill_id, service_id, description) 
