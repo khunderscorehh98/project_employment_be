@@ -133,7 +133,33 @@ app.delete('/people/:id', (req, res) => {
     })
 })
 
-//TODO: Endpoint for Updating User Details
+app.put('/people/:id', (req, res) => {
+    let user_id = req.params.id
+
+    let wrap  = req.body
+    let name = wrap.name
+    let age = wrap.age
+    let address = wrap.address
+    let ic = wrap.ic
+    let major = wrap.major
+    let description = wrap.description
+
+    let sql = `update users set name = '${name}', age = '${age}', address = '${address}', ic = '${ic}', major = '${major}', description = '${description}' where user_id = '${user_id}' `
+
+    db.connection.query(sql, (error, result) => {
+        if(error) {
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+        res.status(200).json({
+            error: false,
+            message: 'Record has been updated!',
+            data: result
+        })
+    })
+})
 
 //USER-----------LOGIN
 //GET ALL LOGIN
