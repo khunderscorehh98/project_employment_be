@@ -46,9 +46,11 @@ app.get("/" , (req, res) => {
 // Router 
 const userRouter = require('./router/users')
 const loginRouter = require('./router/login')
+const serviceRouter = require('./router/service')
 
 app.use('/', userRouter)
 app.use('/', loginRouter)
+app.use('/', serviceRouter)
 
 //Localhosting
 const PORT = '5000';
