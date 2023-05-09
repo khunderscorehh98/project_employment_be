@@ -44,7 +44,8 @@ router.get('/people/:id', (req, res) => {
 router.post('/people', (req, res) => {
     let wrap = req.body
 
-    let name = wrap.name
+    let fname = wrap.fname
+    let lname = wrap.lname
     let age = wrap.age
     let address = wrap.address
     let ic = wrap.ic
@@ -53,8 +54,8 @@ router.post('/people', (req, res) => {
     let service_id = getNextRandom()
     let description = wrap.description
 
-    let sql = `insert into users (name, age, address, ic, major, skill_id, service_id, description) 
-    values ('${name}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
+    let sql = `insert into users (first_name, last_name, age, address, ic, major, skill_id, service_id, description) 
+    values ('${fname}', '${lname}', '${age}', '${address}', '${ic}', '${major}', '${skill_id}', '${service_id}', '${description}')`
 
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -94,14 +95,15 @@ router.put('/people/:id', (req, res) => {
     let user_id = req.params.id
 
     let wrap  = req.body
-    let name = wrap.name
+    let fname = wrap.fname
+    let lname = wrap.lname
     let age = wrap.age
     let address = wrap.address
     let ic = wrap.ic
     let major = wrap.major
     let description = wrap.description
 
-    let sql = `update users set name = '${name}', age = '${age}', address = '${address}', ic = '${ic}', major = '${major}', description = '${description}' where user_id = '${user_id}' `
+    let sql = `update users set first_name = '${fname}', last_name = '${lname}', age = '${age}', address = '${address}', ic = '${ic}', major = '${major}', description = '${description}' where user_id = '${user_id}' `
 
     db.connection.query(sql, (error, result) => {
         if(error) {
