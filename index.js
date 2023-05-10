@@ -1,9 +1,36 @@
 const express = require('express');
 const app = express();
+const handlebars = require('handlebars');
+const fs = require('fs');
 
-const cors = require('cors')
+const cors = require('cors');
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+
+const template = fs.readFileSync('../backend/views/index.handlebars', 'utf8');
+const peoplePage = fs.readFileSync('../backend/views')
+const compiledTemplate = handlebars.compile(template);
+
+app.use(express.static('public'));
+
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(__dirname + '/favicon.ico');
+});
+
+
+// Index Routing
+app.get('/', (req, res) => {
+  const renderedTemplate = compiledTemplate({
+    title: 'Page',
+    heading: 'Welcome to Database!',
+    content: template,
+  });
+  
+  // Send the rendered HTML to the client
+  res.send(renderedTemplate);
+});
+
+app.use(express.static('public'));
 
 // Random Number Generator, interval 3 seconds-------------------------
 const uuid = require('uuid');
@@ -38,20 +65,15 @@ setInterval(() => {
 }, 3000);
 //--------------------------------------------------------------------------------
 
-// Index Routing
-app.get("/" , (req, res) => {
-    res.json("Welcome to Database!")
-})
-
 // Router 
-const userRouter = require('./router/users')
-const loginRouter = require('./router/login')
-const serviceRouter = require('./router/service')
+const userRouter = require('./router/users');
+const loginRouter = require('./router/login');
+const serviceRouter = require('./router/service');
 
-app.use('/', userRouter)
-app.use('/', loginRouter)
-app.use('/', serviceRouter)
+app.use('/', userRouter);
+app.use('/', loginRouter);
+app.use('/', serviceRouter);
 
 //Localhosting
 const PORT = '5000';
-app.listen(PORT, console.log(`Your backend is up! at port: ${PORT}`))
+app.listen(PORT, console.log(`Your backend is up! at port: ${PORT}`));
