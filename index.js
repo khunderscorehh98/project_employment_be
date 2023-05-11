@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 const template = fs.readFileSync('../backend/views/index.handlebars', 'utf8');
-const peoplePage = fs.readFileSync('../backend/views')
+
 const compiledTemplate = handlebars.compile(template);
 
 app.use(express.static('public'));
