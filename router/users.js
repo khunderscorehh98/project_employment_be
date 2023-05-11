@@ -1,10 +1,26 @@
 const express = require('express');
 const router = express.Router()
+const fs = require('fs');
+const handlebars = require('handlebars')
+
+// Navbar
+const nav = require('../views/nav')
+handlebars.registerPartial('nav', nav)
 
 const db = require('../config/db')
 
+const peoplePage = fs.readFileSync('../backend/views/people.handlebars', 'utf8')
+
+const compiledTemplate = handlebars.compile(peoplePage);
+
 //GET ALL People
 router.get('/people', (req, res) => {
+    const renderedTemplate = compiledTemplate({
+        title: 'Page',
+        heading: 'Welcome to Database!',
+        content: peoplePage,
+      });
+
     let sql = `select * from users`
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -19,6 +35,7 @@ router.get('/people', (req, res) => {
             data: result
         })
     })
+    res.send(renderedTemplate)
 })
 
 //GET People by ID
