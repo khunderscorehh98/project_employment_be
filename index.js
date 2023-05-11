@@ -69,10 +69,12 @@ setInterval(() => {
 const userRouter = require('./router/users');
 const loginRouter = require('./router/login');
 const serviceRouter = require('./router/service');
+const skillRouter = require('./router/skill')
 
 app.use('/', userRouter);
 app.use('/', loginRouter);
 app.use('/', serviceRouter);
+app.use('/', skillRouter)
 
 //Localhosting
 const PORT = '5000';
