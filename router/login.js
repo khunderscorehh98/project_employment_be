@@ -3,6 +3,7 @@ const router = express.Router()
 
 const db = require('../config/db')
 
+
 //GET ALL LOGIN
 router.get('/login', (req, res) => {
     let sql = `select * from login`
