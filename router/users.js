@@ -1,26 +1,44 @@
 const express = require('express');
 const router = express.Router()
 const fs = require('fs');
-const handlebars = require('handlebars')
-
-// Navbar
-const nav = require('../views/nav')
-handlebars.registerPartial('nav', nav)
 
 const db = require('../config/db')
 
-const peoplePage = fs.readFileSync('../backend/views/people.handlebars', 'utf8')
 
-const compiledTemplate = handlebars.compile(peoplePage);
+const uuid = require('uuid');
+const seedrandom = require('seedrandom');
+const rng = seedrandom(uuid.v4());
+
+const MAX_NUMBER = 1000000;
+const MAX_ATTEMPTS = 10;
+const usedNumbers = new Set();
+
+function getNextRandom() {
+  let outputRng;
+  let attempts = 0;
+  do {
+    outputRng = Math.floor(rng() * MAX_NUMBER);
+    attempts += 1;
+  } while (usedNumbers.has(outputRng) && attempts < MAX_ATTEMPTS);
+
+  if (attempts === MAX_ATTEMPTS) {
+    // Reset the set of used numbers if we've exhausted all attempts
+    usedNumbers.clear();
+  } else {
+    usedNumbers.add(outputRng);
+  }
+
+  return outputRng;
+}
+
+setInterval(() => {
+  const outputRng = getNextRandom();
+  console.log(outputRng);
+}, 2500);
+
 
 //GET ALL People
 router.get('/people', (req, res) => {
-    const renderedTemplate = compiledTemplate({
-        title: 'Page',
-        heading: 'Welcome to Database!',
-        content: peoplePage,
-      });
-
     let sql = `select * from users`
     db.connection.query(sql, (error, result) => {
         if(error) {
@@ -35,7 +53,6 @@ router.get('/people', (req, res) => {
             data: result
         })
     })
-    res.send(renderedTemplate)
 })
 
 //GET People by ID
